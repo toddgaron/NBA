@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Stock Quotes</title>
+			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+	
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+		var methods=[{id: "Open", text:"Open"},{id: "High", text:"High"},{id: "Low", text:"Low"},{id: "Volume", text:"Volume"},{id: "Ex-Dividend", text:"Ex-Dividend"},{id: "Adj. Open", text:"Adj. Open"},{id: "Adj. High", text:"Adj. High"},{id: "Adj. Low", text:"Adj. Low"},{id: "Adj. Close", text:"Adj. Close"},{id: "Adj. Volume", text:"Adj. Volume"}];
+		$(document).ready(function() {
+  $(".js-example-basic-single").select2({
+  data : methods,
+  });
+  });
+		</script>
+	</head>
+	<body>
+	<div class="container">
+		<div>
+  			<h1>Let's get a stock quote</h1>
+		</div>
+		<form id='userinfoform' method='post' action='index' >
+		<p>Enter a symbol: <input name="name"></input> and a method <select class="js-example-basic-single" name='method'></select></p>
+		      <p>
+    <input type='submit' value='Submit' />
+      </p>
+		</form>
+		</div>
+	</body>
+</html>
