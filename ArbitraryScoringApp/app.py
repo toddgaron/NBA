@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, redirect
 from requests import get
 from simplejson import loads
 from pandas import DataFrame,to_datetime
-from bokeh.plotting import figure
-from bokeh.embed import components
+
 from dateutil.relativedelta import *
+from asteval import Interpreter
 
 app = Flask(__name__)
 app.vars={}
+aeval = Interpreter()
 
 @app.route('/')
 def main():
@@ -19,22 +20,13 @@ def index():
 		return render_template('stockinfo.html')
 	else:
 		app.vars['Name']=request.form['name']
-		app.vars['Method']=request.form['method']
+		print app.vars
 		try:
-			w=get('https://www.quandl.com/api/v3/datasets/WIKI/{}/data.json?api_key=2HugxxJfTx-g-EXLbDx-'.format(app.vars['Name'])).text
-			w=loads(w)
-			w=DataFrame([row[1:] for row in w['dataset_data']['data']],columns=w['dataset_data']['column_names'][1:],index=to_datetime([row[0] for row in w['dataset_data']['data']]))
-			first = w.index[0]
-			print first
-			last = first +relativedelta(months=-1)
-			print last
-			wMonth=w[first:last]
-			p=figure(width=800,height=400,x_axis_type="datetime")
-			p.line(wMonth.index,list(w[app.vars['Method']]))
-			p.xaxis.axis_label = "Time"
-			p.yaxis.axis_label = app.vars['Method']
-			script, div = components(p)
-			return render_template('outpage.html',name=app.vars['Name'],s=script,d=div)
+			w =  map(lambda x: aeval(str(x).join(app.vars['Name'].split('%'))), range(100))
+			print w
+			if None in w or len(filter(lambda x: x < 0, w)) !=0:
+				return render_template('errorpage.html')
+			return render_template('outpage.html', name=w)
 		except:
 			return render_template('errorpage.html')
 

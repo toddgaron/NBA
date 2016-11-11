@@ -9,3 +9,4 @@ simplejson==3.8.0
 pandas>=0.17.1
 numpy>=1.11.1
 bokeh==0.12.1
+asteval >= 0.9.8

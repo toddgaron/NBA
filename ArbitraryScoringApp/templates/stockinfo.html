@@ -11,22 +11,14 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-		var methods=[{id: "Open", text:"Open"},{id: "High", text:"High"},{id: "Low", text:"Low"},{id: "Volume", text:"Volume"},{id: "Ex-Dividend", text:"Ex-Dividend"},{id: "Adj. Open", text:"Adj. Open"},{id: "Adj. High", text:"Adj. High"},{id: "Adj. Low", text:"Adj. Low"},{id: "Adj. Close", text:"Adj. Close"},{id: "Adj. Volume", text:"Adj. Volume"}];
-		$(document).ready(function() {
-  $(".js-example-basic-single").select2({
-  data : methods,
-  });
-  });
-		</script>
 	</head>
 	<body>
 	<div class="container">
 		<div>
-  			<h1>Let's get a stock quote</h1>
+  			<h1>Let's reevaluate the past season</h1>
 		</div>
 		<form id='userinfoform' method='post' action='index' >
-		<p>Enter a symbol: <input name="name"></input> and a method <select class="js-example-basic-single" name='method'></select></p>
+		<p>Enter an expression using % as your independent variable using standard python syntax. Functions like log are already in the namespace: <input name="name"></input></p>
 		      <p>
     <input type='submit' value='Submit' />
       </p>
