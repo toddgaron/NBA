@@ -11,14 +11,35 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		
+		
+		<script>
+	$(document).ready(function(){
+		{% for i in range(4) %}
+		$("#cd{{i}}").click(function(){
+    		$("#name").val("{{examples[i][1]|safe}}");
+    		$('#inlineRadio{{examples[i][2]}}').prop("checked", true)
+    		})
+    	{% endfor %}
+
+		
+		})
+		</script>
 	</head>
+	
+	
 	<body>
 	<div class="container">
 		<div>
-  			<h1>Let's reevaluate the past season</h1>
+  			<h1>What the NBA would look like if shots were scored with ...</h1>
 		</div>
 		<form id='userinfoform' method='post' action='index' >
-		<p>Enter an expression using % as your independent variable using standard python syntax. Functions like log are already in the namespace: <input name="name"></input></p>
+		<p>Enter an expression using % as your independent variable using standard python syntax. Functions like log are already in the namespace: <input type="text" class="form-control" name="name" id="name" placeholder="2 if % < 23 else 3"></input></p>
+		<ol> Some examples:
+		{% for i in range(4) %}
+		<li> {{examples[i][0]}} <input class ="btn btn-primary" id="cd{{i|safe}}" type="button" value="{{examples[i][1] |safe}}" onClick=" check(); ">
+		{% endfor %}
+		</ol>
 		<p>Do you want to include free throws?    <label class="radio-inline">
   <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value='1' checked> Yes
 </label>

@@ -15,6 +15,8 @@ app.vars = {}
 app.players = load(open('scoringChamps','rb'))
 app.games = load(open('gameData','rb'))
 aeval = Interpreter()
+app.examples = [["Only Two Pointers", "2",1], ["A Thirty Foot Four Point Line", "2 if % < 23 else 3 if % < 30 else 4", 1 ],["The Knicks are the First Seed in the East", "-2*exp(-%) + log(1+%)", 1 ], ["The Kinds are the First Seed in the West", "2 if 3 <= % <= 5 else 0", 2]]
+
 
 @app.route('/')
 def main():
@@ -23,9 +25,9 @@ def main():
 @app.route('/index',methods=['GET','POST'])
 def index():
 	if request.method=='GET':
-		return render_template('stockinfo.html')
+		return render_template('stockinfo.html', examples = app.examples)
 	else:
-		app.vars['Name'] = request.form['name']
+		app.vars['Name'] = request.form['name'].strip()
 		app.vars['Fts'] = bool(request.form['inlineRadioOptions'])
 		print app.vars
 		try:
@@ -34,7 +36,11 @@ def index():
 				return render_template('errorpage.html')
 			v = playerScoring(app.players, lambda x: w[int(x)], app.vars['Fts'])
 			u = reScoreSeason(app.games, lambda x: w[int(x)], app.vars['Fts'])
-			return render_template('outpage.html', name=app.vars['Name'], pts = [[x,y] for x,y in enumerate(w)], players = v, games = u)
+			z = [[0, 0.8437591992934943], [1, 0.6227063044592517], [2, 0.5439440106646353], [3, 0.4285026480500722], [4, 0.37752769474239495], [5, 0.3896667323999211], [6, 0.3950091296409008], [7, 0.40369393139841686], [8, 0.39677744209466265], [9, 0.41600227790432803], [10, 0.39260830051499546], [11, 0.403338898163606], [12, 0.4000619770684847], [13, 0.4083076923076923], [14, 0.4118663594470046], [15, 0.4085207100591716], [16, 0.40458309262468706], [17, 0.40657894736842104], [18, 0.39879062736205595], [19, 0.4022117860930162], [20, 0.3993319725366487], [21, 0.38645635028555886], [22, 0.38565368299267255], [23, 0.383383253027738], [24, 0.36440859447498036], [25, 0.3603967304625199], [26, 0.34375875268415645], [27, 0.3332474890548545], [28, 0.32034294621979736], [29, 0.2737306843267108], [30, 0.25252525252525254], [31, 0.19791666666666666], [32, 0.125], [33, 0.18181818181818182], [34, 0.08823529411764706], [35, 0.11538461538461539], [36, 0.06060606060606061], [37, 0.037037037037037035], [38, 0.14705882352941177], [39, 0.0], [40, 0.08888888888888889], [41, 0.14634146341463414], [42, 0.0], [43, 0.047619047619047616], [44, 0.1], [45, 0.05], [46, 0.05263157894736842], [47, 0.043478260869565216], [48, 0.043478260869565216], [49, 0.1]]
+			z = map(lambda (i,j): [j[0], i*j[1]], zip(w,z))
+			print w
+			print z
+			return render_template('outpage.html', name=app.vars['Name'], pts = [[x,y] for x,y in enumerate(w)], players = v, games = u, expected = z)
 		except:
 			return render_template('errorpage.html')
 
@@ -67,8 +73,9 @@ def reScoreSeason(games, func, fts=True):
 def playerScoring(pts, func, fts = True):
 	r = []
 	for player,games in pts.iteritems():
-		r.append((player,round(mean([sum(map( lambda x: func(x) , i['shot_distance']))+ (i['fts'] if fts else 0) for i in games ]),1), round(mean([sum( i['points'] )+ (i['fts'] if fts else 0) for i in games ]),1)))
-	return sorted(r, key = lambda (i, j, k): (-j, -k, i))
+		r.append((player,round(mean([sum(map( lambda x: func(x) , i['shot_distance']))+ (i['fts'] if fts else 0) for i in games ]),1), round(mean([sum( i['points'] )+ (i['fts'] if fts else 0) for i in games ]),1), round(mean(reduce(lambda x,y: x+y, [ map( lambda x: func(x) , i['shot_distance'])  for i in games ])),1), round(mean(reduce(lambda x,y: x+y, [ i['points']  for i in games ])),1)
+		))
+	return sorted(r, key = lambda (i, j, k, l, m): (-j, -k, i, l, m))
 
 
 

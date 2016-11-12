@@ -586,7 +586,8 @@ svg .title {
 <body>
 <div class="container">
 
-<h1>{{name}}</h1>
+<h1>What the NBA would look like if shots were scored with ...</h1>
+<h2>pts(%) = {{name}}</h2>
 
 <script>
         var testdata = [{
@@ -594,10 +595,10 @@ svg .title {
                 "key": "Shots Taken",
                 "values": [[0, 13588], [1, 19510], [2, 21004], [3, 10385], [4, 5687], [5, 5071], [6, 4929], [7, 4548], [8, 3972], [9, 3512], [10, 3301], [11, 2995], [12, 3227], [13, 3250], [14, 3472], [15, 4225], [16, 5193], [17, 6080], [18, 6615], [19, 6601], [20, 5389], [21, 3677], [22, 2593], [23, 7679], [24, 14009], [25, 20064], [26, 10711], [27, 3883], [28, 1283], [29, 453], [30, 198], [31, 96], [32, 48], [33, 44], [34, 34], [35, 26], [36, 33], [37, 27], [38, 34], [39, 24], [40, 45], [41, 41], [42, 18], [43, 21], [44, 20], [45, 20], [46, 19], [47, 23], [48, 23], [49, 30]]
         }, {
-            "key": "Value",
-                "values": {{pts[:50] | safe }} }, {
-            "key": "Shot Probability",
-                "values":[[0, 0.8437591992934943], [1, 0.6227063044592517], [2, 0.5439440106646353], [3, 0.4285026480500722], [4, 0.37752769474239495], [5, 0.3896667323999211], [6, 0.3950091296409008], [7, 0.40369393139841686], [8, 0.39677744209466265], [9, 0.41600227790432803], [10, 0.39260830051499546], [11, 0.403338898163606], [12, 0.4000619770684847], [13, 0.4083076923076923], [14, 0.4118663594470046], [15, 0.4085207100591716], [16, 0.40458309262468706], [17, 0.40657894736842104], [18, 0.39879062736205595], [19, 0.4022117860930162], [20, 0.3993319725366487], [21, 0.38645635028555886], [22, 0.38565368299267255], [23, 0.383383253027738], [24, 0.36440859447498036], [25, 0.3603967304625199], [26, 0.34375875268415645], [27, 0.3332474890548545], [28, 0.32034294621979736], [29, 0.2737306843267108], [30, 0.25252525252525254], [31, 0.19791666666666666], [32, 0.125], [33, 0.18181818181818182], [34, 0.08823529411764706], [35, 0.11538461538461539], [36, 0.06060606060606061], [37, 0.037037037037037035], [38, 0.14705882352941177], [39, 0.0], [40, 0.08888888888888889], [41, 0.14634146341463414], [42, 0.0], [43, 0.047619047619047616], [44, 0.1], [45, 0.05], [46, 0.05263157894736842], [47, 0.043478260869565216], [48, 0.043478260869565216], [49, 0.1]]
+            "key": "Point Value",
+            	"values": {{pts[:50] | safe }} }, {
+            "key": "Points Per Shot (w/o fouls)",
+            "values":  {{expected| safe}}
         }].map(function (series) {
             series.values = series.values.map(function (d) {
                 return {
@@ -624,10 +625,10 @@ svg .title {
                 .color(d3.scale.category10().range());
 
             chart.xAxis.tickFormat(function (d) {
-                var dx = testdata[0].values[d] && testdata[0].values[d].x || 0;
+                var dx = testdata[0].values[d] && testdata[0].values[d].x;
                 return dx //? d3.time.format('%x')(new Date(dx)) : '';
-            })
-                .showMaxMin(false);
+            });
+                //.showMaxMin(false);
 
             chart.y1Axis.tickFormat(d3.format(',f'));
 
@@ -640,7 +641,7 @@ svg .title {
 
             d3.select('#chart svg')
                 .datum(testdata)
-                .transition().duration(500).call(chart);
+                .transition().duration(0).call(chart);
 
             nv.utils.windowResize(chart.update);
 
@@ -657,17 +658,17 @@ svg .title {
     <svg></svg>
 </div>
 
-<row>
-<div class="col-lg-4">
+<div class = "center-block">
+<div class="col-md-4">
 <table  class="table table-striped">
 <thead>
 <tr>
 <th>East</th>
-<th>Wins</th>
-<th>Losses</th>
-<th>Ties</th>
-<th>PPG (Difference)</th>
-<th>OPP PPG (Difference) </th>
+<th>W</th>
+<th>L</th>
+<th>T</th>
+<th>PPG (Δ)</th>
+<th>OPP PPG (Δ) </th>
 </tr>
 </thead><tbody>
 {% for i in range(8) %}
@@ -693,16 +694,16 @@ svg .title {
 </tbody>
 </table></div>
 
-<div class="col-lg-4 col-xs-offset-1">
+<div class="col-md-4">
 <table  class="table table-striped">
 <thead>
 <tr>
 <th>West</th>
-<th>Wins</th>
-<th>Losses</th>
-<th>Ties</th>
-<th>PPG (Difference)</th>
-<th>OPP PPG (Difference) </th>
+<th>W</th>
+<th>L</th>
+<th>T</th>
+<th>PPG (Δ)</th>
+<th>OPP PPG (Δ) </th>
 </tr>
 </thead><tbody>
 {% for i in range(15,23) %}
@@ -728,28 +729,31 @@ svg .title {
 </tbody>
 </table></div>
 
-<div class="col-md-3 col-xs-offset-1">
+<div class="col-md-4">
 <table class="table table-striped">
 <thead>
 <tr>
 <th>Scoring Champion</th>
-<th>PPG (Difference)</th>
+<th>PPG (Δ)</th>
+<th>PPS w/o FTs (Δ)</th>
 </tr></thead>
 <tbody>
 <tr class="success">
 <td>{{players[0][0]}}</td>
 <td>{{players[0][1]}} ({{players[0][1]-players[0][2]}})</td>
+<td>{{players[0][3]}} ({{players[0][3]-players[0][4]}})</td>
 </tr>
 {% for player in players[1:15] %}
 <tr>
 <td>{{player[0]}}</td>
 <td>{{player[1]}} ({{player[1] - player[2]}})</td>
+<td>{{player[3]}} ({{player[3] - player[4]}})</td>
 </tr>
 {% endfor %}
 </tbody>
 </table></div>
 
-</row>
+</div>
 </div>
 </body>
 </html>
