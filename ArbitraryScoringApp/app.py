@@ -25,14 +25,15 @@ def index():
 	if request.method=='GET':
 		return render_template('stockinfo.html')
 	else:
-		app.vars['Name']=request.form['name']
+		app.vars['Name'] = request.form['name']
+		app.vars['Fts'] = bool(request.form['inlineRadioOptions'])
 		print app.vars
 		try:
 			w =  map(lambda x: aeval(str(x).join(app.vars['Name'].split('%'))), range(100))
 			if None in w:
 				return render_template('errorpage.html')
-			v = playerScoring(app.players, lambda x: w[int(x)])
-			u = reScoreSeason(app.games, lambda x: w[int(x)])
+			v = playerScoring(app.players, lambda x: w[int(x)], app.vars['Fts'])
+			u = reScoreSeason(app.games, lambda x: w[int(x)], app.vars['Fts'])
 			return render_template('outpage.html', name=app.vars['Name'], pts = [[x,y] for x,y in enumerate(w)], players = v, games = u)
 		except:
 			return render_template('errorpage.html')
@@ -66,7 +67,7 @@ def reScoreSeason(games, func, fts=True):
 def playerScoring(pts, func, fts = True):
 	r = []
 	for player,games in pts.iteritems():
-		r.append((player,round(mean([sum(map( lambda x: func(x) , i['shot_distance']))+ i['fts'] if fts else 0 for i in games ]),1), round(mean([sum( i['points'] )+ i['fts'] if fts else 0 for i in games ]),1)))
+		r.append((player,round(mean([sum(map( lambda x: func(x) , i['shot_distance']))+ (i['fts'] if fts else 0) for i in games ]),1), round(mean([sum( i['points'] )+ (i['fts'] if fts else 0) for i in games ]),1)))
 	return sorted(r, key = lambda (i, j, k): (-j, -k, i))
 
 

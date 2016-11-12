@@ -693,7 +693,7 @@ svg .title {
 </tbody>
 </table></div>
 
-<div class="col-lg-4 col-md-offset-1">
+<div class="col-lg-4 col-xs-offset-1">
 <table  class="table table-striped">
 <thead>
 <tr>
@@ -728,25 +728,22 @@ svg .title {
 </tbody>
 </table></div>
 
-<div class="col-lg-4">
+<div class="col-md-3 col-xs-offset-1">
 <table class="table table-striped">
 <thead>
 <tr>
-<th></th>
-<th>PPG</th>
-<th>PPG (Current)</th>
+<th>Scoring Champion</th>
+<th>PPG (Difference)</th>
 </tr></thead>
 <tbody>
 <tr class="success">
 <td>{{players[0][0]}}</td>
-<td>{{players[0][1]}}</td>
-<td>{{players[0][2]}}</td>
+<td>{{players[0][1]}} ({{players[0][1]-players[0][2]}})</td>
 </tr>
 {% for player in players[1:15] %}
 <tr>
 <td>{{player[0]}}</td>
-<td>{{player[1]}}</td>
-<td>{{player[2]}}</td>
+<td>{{player[1]}} ({{player[1] - player[2]}})</td>
 </tr>
 {% endfor %}
 </tbody>
