@@ -1,28 +1,758 @@
 <!doctype html>
-
+<html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		
+<link rel="stylesheet" type="text/css" href="https://raw.github.com/novus/nvd3/master/src/nv.d3.css‌​"/>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+<script src="https://rawgit.com/novus/nvd3/master/build/nv.d3.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-		<link
-    href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.0.min.css"
-    rel="stylesheet" type="text/css">
-<link
-    href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.0.min.css"
-    rel="stylesheet" type="text/css">
+    <style>
+/********************
+ * HTML CSS
+ */
+ .chartWrap {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+/********************
+ * TOOLTIP CSS
+ */
+ .nvtooltip {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.75);
+    padding: 1px;
+    border: 1px solid rgba(0, 0, 0, .2);
+    z-index: 10000;
+    font-family: Arial;
+    font-size: 13px;
+    /*transition: opacity 500ms linear;
+  -moz-transition: opacity 500ms linear;
+  -webkit-transition: opacity 500ms linear;
 
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.0.min.js"></script>
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.0.min.js"></script>
+  transition-delay: 500ms;
+  -moz-transition-delay: 500ms;
+  -webkit-transition-delay: 500ms;
 
-	</head>
-<title>Stock Quote</title>
+*/
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.nvtooltip.x-nvtooltip, .nvtooltip.y-nvtooltip {
+    padding: 8px;
+}
+.nvtooltip h3 {
+    margin: 0;
+    padding: 4px 14px;
+    line-height: 18px;
+    font-weight: normal;
+    background-color: rgba(247, 247, 247, 0.75);
+    text-align: center;
+    border-bottom: 1px solid #ebebeb;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+.nvtooltip p {
+    margin: 0;
+    padding: 5px 14px;
+    text-align: center;
+}
+.nvtooltip span {
+    display: inline-block;
+    margin: 2px 0;
+}
+.nvtooltip-pending-removal {
+    position: absolute;
+    pointer-events: none;
+}
+/********************
+ * SVG CSS
+ */
+ svg {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Trying to get SVG to act like a greedy block in all browsers */
+    display: block;
+    width:100%;
+    height:100%;
+}
+svg text {
+    font: normal 12px Arial;
+}
+svg .title {
+    font: bold 14px Arial;
+}
+.nvd3 .nv-background {
+    fill: white;
+    fill-opacity: 0;
+    /*
+  pointer-events: none;
+  */
+}
+.nvd3.nv-noData {
+    font-size: 18px;
+    font-weight: bold;
+}
+/**********
+*  Brush
+*/
+ .nv-brush .extent {
+    fill-opacity: .125;
+    shape-rendering: crispEdges;
+}
+/**********
+*  Legend
+*/
+ .nvd3 .nv-legend .nv-series {
+    cursor: pointer;
+}
+.nvd3 .nv-legend .disabled circle {
+    fill-opacity: 0;
+}
+/**********
+*  Axes
+*/
+ .nvd3 .nv-axis path {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .75;
+    shape-rendering: crispEdges;
+}
+.nvd3 .nv-axis path.domain {
+    stroke-opacity: .75;
+}
+.nvd3 .nv-axis.nv-x path.domain {
+    stroke-opacity: 0;
+}
+.nvd3 .nv-axis line {
+    fill: none;
+    stroke: #e5e5e5;
+    shape-rendering: crispEdges;
+}
+.nvd3 .nv-axis .zero line,
+/*this selector may not be necessary*/
+ .nvd3 .nv-axis line.zero {
+    stroke-opacity: .75;
+}
+.nvd3 .nv-axis .nv-axisMaxMin text {
+    font-weight: bold;
+}
+.nvd3 .x .nv-axis .nv-axisMaxMin text, .nvd3 .x2 .nv-axis .nv-axisMaxMin text, .nvd3 .x3 .nv-axis .nv-axisMaxMin text {
+    text-anchor: middle
+}
+/**********
+*  Brush
+*/
+ .nv-brush .resize path {
+    fill: #eee;
+    stroke: #666;
+}
+/**********
+*  Bars
+*/
+ .nvd3 .nv-bars .negative rect {
+    zfill: brown;
+}
+.nvd3 .nv-bars rect {
+    zfill: steelblue;
+    fill-opacity: .75;
+    transition: fill-opacity 250ms linear;
+    -moz-transition: fill-opacity 250ms linear;
+    -webkit-transition: fill-opacity 250ms linear;
+}
+.nvd3 .nv-bars rect:hover {
+    fill-opacity: 1;
+}
+.nvd3 .nv-bars .hover rect {
+    fill: lightblue;
+}
+.nvd3 .nv-bars text {
+    fill: rgba(0, 0, 0, 0);
+}
+.nvd3 .nv-bars .hover text {
+    fill: rgba(0, 0, 0, 1);
+}
+/**********
+*  Bars
+*/
+ .nvd3 .nv-multibar .nv-groups rect, .nvd3 .nv-multibarHorizontal .nv-groups rect, .nvd3 .nv-discretebar .nv-groups rect {
+    stroke-opacity: 0;
+    transition: fill-opacity 250ms linear;
+    -moz-transition: fill-opacity 250ms linear;
+    -webkit-transition: fill-opacity 250ms linear;
+}
+.nvd3 .nv-multibar .nv-groups rect:hover, .nvd3 .nv-multibarHorizontal .nv-groups rect:hover, .nvd3 .nv-discretebar .nv-groups rect:hover {
+    fill-opacity: 1;
+}
+.nvd3 .nv-discretebar .nv-groups text, .nvd3 .nv-multibarHorizontal .nv-groups text {
+    font-weight: bold;
+    fill: rgba(0, 0, 0, 1);
+    stroke: rgba(0, 0, 0, 0);
+}
+/***********
+*  Pie Chart
+*/
+ .nvd3.nv-pie path {
+    stroke-opacity: 0;
+    transition: fill-opacity 250ms linear, stroke-width 250ms linear, stroke-opacity 250ms linear;
+    -moz-transition: fill-opacity 250ms linear, stroke-width 250ms linear, stroke-opacity 250ms linear;
+    -webkit-transition: fill-opacity 250ms linear, stroke-width 250ms linear, stroke-opacity 250ms linear;
+}
+.nvd3.nv-pie .nv-slice text {
+    stroke: #000;
+    stroke-width: 0;
+}
+.nvd3.nv-pie path {
+    stroke: #fff;
+    stroke-width: 1px;
+    stroke-opacity: 1;
+}
+.nvd3.nv-pie .hover path {
+    fill-opacity: .7;
+    /*
+  stroke-width: 6px;
+  stroke-opacity: 1;
+*/
+}
+.nvd3.nv-pie .nv-label rect {
+    fill-opacity: 0;
+    stroke-opacity: 0;
+}
+/**********
+* Lines
+*/
+ .nvd3 .nv-groups path.nv-line {
+    fill: none;
+    stroke-width: 2.5px;
+    /*
+  stroke-linecap: round;
+  shape-rendering: geometricPrecision;
 
-<div class=container>
-  <h1>Quote for {{name}}</h1>
+  transition: stroke-width 250ms linear;
+  -moz-transition: stroke-width 250ms linear;
+  -webkit-transition: stroke-width 250ms linear;
 
-  <div class=metanav>
+  transition-delay: 250ms
+  -moz-transition-delay: 250ms;
+  -webkit-transition-delay: 250ms;
+  */
+}
+.nvd3 .nv-groups path.nv-area {
+    stroke: none;
+    /*
+  stroke-linecap: round;
+  shape-rendering: geometricPrecision;
+
+  stroke-width: 2.5px;
+  transition: stroke-width 250ms linear;
+  -moz-transition: stroke-width 250ms linear;
+  -webkit-transition: stroke-width 250ms linear;
+
+  transition-delay: 250ms
+  -moz-transition-delay: 250ms;
+  -webkit-transition-delay: 250ms;
+  */
+}
+.nvd3 .nv-line.hover path {
+    stroke-width: 6px;
+}
+/*
+.nvd3.scatter .groups .point {
+  fill-opacity: 0.1;
+  stroke-opacity: 0.1;
+}
+  */
+ .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point {
+    fill-opacity: 0;
+    stroke-opacity: 0;
+}
+.nvd3.nv-scatter.nv-single-point .nv-groups .nv-point {
+    fill-opacity: .5 !important;
+    stroke-opacity: .5 !important;
+}
+.nvd3 .nv-groups .nv-point {
+    transition: stroke-width 250ms linear, stroke-opacity 250ms linear;
+    -moz-transition: stroke-width 250ms linear, stroke-opacity 250ms linear;
+    -webkit-transition: stroke-width 250ms linear, stroke-opacity 250ms linear;
+}
+.nvd3.nv-scatter .nv-groups .nv-point.hover, .nvd3 .nv-groups .nv-point.hover {
+    stroke-width: 20px;
+    fill-opacity: .5 !important;
+    stroke-opacity: .5 !important;
+}
+.nvd3 .nv-point-paths path {
+    stroke: #aaa;
+    stroke-opacity: 0;
+    fill: #eee;
+    fill-opacity: 0;
+}
+.nvd3 .nv-indexLine {
+    cursor: ew-resize;
+}
+/**********
+* Distribution
+*/
+ .nvd3 .nv-distribution {
+    pointer-events: none;
+}
+/**********
+*  Scatter
+*/
+
+/* **Attempting to remove this for useVoronoi(false), need to see if it's required anywhere
+.nvd3 .nv-groups .nv-point {
+  pointer-events: none;
+}
+*/
+ .nvd3 .nv-groups .nv-point.hover {
+    stroke-width: 20px;
+    stroke-opacity: .5;
+}
+.nvd3 .nv-scatter .nv-point.hover {
+    fill-opacity: 1;
+}
+/*
+.nv-group.hover .nv-point {
+  fill-opacity: 1;
+}
+*/
+
+/**********
+*  Stacked Area
+*/
+ .nvd3.nv-stackedarea path.nv-area {
+    fill-opacity: .7;
+    /*
+  stroke-opacity: .65;
+  fill-opacity: 1;
+  */
+    stroke-opacity: 0;
+    transition: fill-opacity 250ms linear, stroke-opacity 250ms linear;
+    -moz-transition: fill-opacity 250ms linear, stroke-opacity 250ms linear;
+    -webkit-transition: fill-opacity 250ms linear, stroke-opacity 250ms linear;
+    /*
+  transition-delay: 500ms;
+  -moz-transition-delay: 500ms;
+  -webkit-transition-delay: 500ms;
+  */
+}
+.nvd3.nv-stackedarea path.nv-area.hover {
+    fill-opacity: .9;
+    /*
+  stroke-opacity: .85;
+  */
+}
+/*
+.d3stackedarea .groups path {
+  stroke-opacity: 0;
+}
+  */
+ .nvd3.nv-stackedarea .nv-groups .nv-point {
+    stroke-opacity: 0;
+    fill-opacity: 0;
+}
+.nvd3.nv-stackedarea .nv-groups .nv-point.hover {
+    stroke-width: 20px;
+    stroke-opacity: .75;
+    fill-opacity: 1;
+}
+/**********
+*  Line Plus Bar
+*/
+ .nvd3.nv-linePlusBar .nv-bar rect {
+    fill-opacity: .75;
+}
+.nvd3.nv-linePlusBar .nv-bar rect:hover {
+    fill-opacity: 1;
+}
+/**********
+*  Bullet
+*/
+ .nvd3.nv-bullet {
+    font: 10px sans-serif;
+}
+.nvd3.nv-bullet .nv-measure {
+    fill-opacity: .8;
+}
+.nvd3.nv-bullet .nv-measure:hover {
+    fill-opacity: 1;
+}
+.nvd3.nv-bullet .nv-marker {
+    stroke: #000;
+    stroke-width: 2px;
+}
+.nvd3.nv-bullet .nv-markerTriangle {
+    stroke: #000;
+    fill: #fff;
+    stroke-width: 1.5px;
+}
+.nvd3.nv-bullet .nv-tick line {
+    stroke: #666;
+    stroke-width: .5px;
+}
+.nvd3.nv-bullet .nv-range.nv-s0 {
+    fill: #eee;
+}
+.nvd3.nv-bullet .nv-range.nv-s1 {
+    fill: #ddd;
+}
+.nvd3.nv-bullet .nv-range.nv-s2 {
+    fill: #ccc;
+}
+.nvd3.nv-bullet .nv-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+.nvd3.nv-bullet .nv-subtitle {
+    fill: #999;
+}
+.nvd3.nv-bullet .nv-range {
+    fill: #999;
+    fill-opacity: .4;
+}
+.nvd3.nv-bullet .nv-range:hover {
+    fill-opacity: .7;
+}
+/**********
+* Sparkline
+*/
+ .nvd3.nv-sparkline path {
+    fill: none;
+}
+.nvd3.nv-sparklineplus g.nv-hoverValue {
+    pointer-events: none;
+}
+.nvd3.nv-sparklineplus .nv-hoverValue line {
+    stroke: #333;
+    stroke-width: 1.5px;
+}
+.nvd3.nv-sparklineplus, .nvd3.nv-sparklineplus g {
+    pointer-events: all;
+}
+.nvd3 .nv-hoverArea {
+    fill-opacity: 0;
+    stroke-opacity: 0;
+}
+.nvd3.nv-sparklineplus .nv-xValue, .nvd3.nv-sparklineplus .nv-yValue {
+    /*
+  stroke: #666;
+  */
+    stroke-width: 0;
+    font-size: .9em;
+    font-weight: normal;
+}
+.nvd3.nv-sparklineplus .nv-yValue {
+    stroke: #f66;
+}
+.nvd3.nv-sparklineplus .nv-maxValue {
+    stroke: #2ca02c;
+    fill: #2ca02c;
+}
+.nvd3.nv-sparklineplus .nv-minValue {
+    stroke: #d62728;
+    fill: #d62728;
+}
+.nvd3.nv-sparklineplus .nv-currentValue {
+    /*
+  stroke: #444;
+  fill: #000;
+  */
+    font-weight: bold;
+    font-size: 1.1em;
+}
+/**********
+* historical stock
+*/
+ .nvd3.nv-ohlcBar .nv-ticks .nv-tick {
+    stroke-width: 2px;
+}
+.nvd3.nv-ohlcBar .nv-ticks .nv-tick.hover {
+    stroke-width: 4px;
+}
+.nvd3.nv-ohlcBar .nv-ticks .nv-tick.positive {
+    stroke: #2ca02c;
+}
+.nvd3.nv-ohlcBar .nv-ticks .nv-tick.negative {
+    stroke: #d62728;
+}
+.nvd3.nv-historicalStockChart .nv-axis .nv-axislabel {
+    font-weight: bold;
+}
+.nvd3.nv-historicalStockChart .nv-dragTarget {
+    fill-opacity: 0;
+    stroke: none;
+    cursor: move;
+}
+.nvd3 .nv-brush .extent {
+    /*
+  cursor: ew-resize !important;
+  */
+    fill-opacity: 0 !important;
+}
+.nvd3 .nv-brushBackground rect {
+    stroke: #000;
+    stroke-width: .4;
+    fill: #fff;
+    fill-opacity: .7;
+}
+/**********
+* Indented Tree
+*/
+
+/**
+ * TODO: the following 3 selectors are based on classes used in the example.  I should either make them standard and leave them here, or move to a CSS file not included in the library
+ */
+ .nvd3.nv-indentedtree .name {
+    margin-left: 5px;
+}
+.nvd3.nv-indentedtree .clickable {
+    color: #08C;
+    cursor: pointer;
+}
+.nvd3.nv-indentedtree span.clickable:hover {
+    color: #005580;
+    text-decoration: underline;
+}
+.nvd3.nv-indentedtree .nv-childrenCount {
+    display: inline-block;
+    margin-left: 5px;
+}
+.nvd3.nv-indentedtree .nv-treeicon {
+    cursor: pointer;
+    /*
+  cursor: n-resize;
+  */
+}
+.nvd3.nv-indentedtree .nv-treeicon.nv-folded {
+    cursor: pointer;
+    /*
+  cursor: s-resize;
+  */
+}
+/**********
+* Parallel Coordinates
+*/
+ .nvd3 .background path {
+    fill: none;
+    stroke: #ccc;
+    stroke-opacity: .4;
+    shape-rendering: crispEdges;
+}
+.nvd3 .foreground path {
+    fill: none;
+    stroke: steelblue;
+    stroke-opacity: .7;
+}
+.nvd3 .brush .extent {
+    fill-opacity: .3;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+}
+.nvd3 .axis line, .axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.nvd3 .axis text {
+    text-shadow: 0 1px 0 #fff;
+}
+#chart {
+    height:400px;
+}
+    </style>
+</head>
+<body>
+<div class="container">
+
+<h1>{{name}}</h1>
+
+<script>
+        var testdata = [{
+            "bar": true,
+                "key": "Shots Taken",
+                "values": [[0, 13588], [1, 19510], [2, 21004], [3, 10385], [4, 5687], [5, 5071], [6, 4929], [7, 4548], [8, 3972], [9, 3512], [10, 3301], [11, 2995], [12, 3227], [13, 3250], [14, 3472], [15, 4225], [16, 5193], [17, 6080], [18, 6615], [19, 6601], [20, 5389], [21, 3677], [22, 2593], [23, 7679], [24, 14009], [25, 20064], [26, 10711], [27, 3883], [28, 1283], [29, 453], [30, 198], [31, 96], [32, 48], [33, 44], [34, 34], [35, 26], [36, 33], [37, 27], [38, 34], [39, 24], [40, 45], [41, 41], [42, 18], [43, 21], [44, 20], [45, 20], [46, 19], [47, 23], [48, 23], [49, 30]]
+        }, {
+            "key": "Value",
+                "values": {{pts[:50] | safe }} }, {
+            "key": "Shot Probability",
+                "values":[[0, 0.8437591992934943], [1, 0.6227063044592517], [2, 0.5439440106646353], [3, 0.4285026480500722], [4, 0.37752769474239495], [5, 0.3896667323999211], [6, 0.3950091296409008], [7, 0.40369393139841686], [8, 0.39677744209466265], [9, 0.41600227790432803], [10, 0.39260830051499546], [11, 0.403338898163606], [12, 0.4000619770684847], [13, 0.4083076923076923], [14, 0.4118663594470046], [15, 0.4085207100591716], [16, 0.40458309262468706], [17, 0.40657894736842104], [18, 0.39879062736205595], [19, 0.4022117860930162], [20, 0.3993319725366487], [21, 0.38645635028555886], [22, 0.38565368299267255], [23, 0.383383253027738], [24, 0.36440859447498036], [25, 0.3603967304625199], [26, 0.34375875268415645], [27, 0.3332474890548545], [28, 0.32034294621979736], [29, 0.2737306843267108], [30, 0.25252525252525254], [31, 0.19791666666666666], [32, 0.125], [33, 0.18181818181818182], [34, 0.08823529411764706], [35, 0.11538461538461539], [36, 0.06060606060606061], [37, 0.037037037037037035], [38, 0.14705882352941177], [39, 0.0], [40, 0.08888888888888889], [41, 0.14634146341463414], [42, 0.0], [43, 0.047619047619047616], [44, 0.1], [45, 0.05], [46, 0.05263157894736842], [47, 0.043478260869565216], [48, 0.043478260869565216], [49, 0.1]]
+        }].map(function (series) {
+            series.values = series.values.map(function (d) {
+                return {
+                    x: d[0],
+                    y: d[1]
+                }
+            });
+            return series;
+        });
+
+        var chart;
+
+        nv.addGraph(function () {
+            chart = nv.models.linePlusBarChart()
+                .margin({
+                top: 30,
+                right: 60,
+                bottom: 50,
+                left: 70
+            })
+                .x(function (d, i) {
+                return i
+            })
+                .color(d3.scale.category10().range());
+
+            chart.xAxis.tickFormat(function (d) {
+                var dx = testdata[0].values[d] && testdata[0].values[d].x || 0;
+                return dx //? d3.time.format('%x')(new Date(dx)) : '';
+            })
+                .showMaxMin(false);
+
+            chart.y1Axis.tickFormat(d3.format(',f'));
+
+            chart.y2Axis.tickFormat(function (d) {
+                return d3.format(',.2f')(d)
+            });
+
+            chart.bars.forceY([0]).padData(false);
+            //chart.lines.forceY([0]);
+
+            d3.select('#chart svg')
+                .datum(testdata)
+                .transition().duration(500).call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            chart.dispatch.on('stateChange', function (e) {
+                nv.log('New State:', JSON.stringify(e));
+            });
+
+            return chart;
+        });
+       
+</script>
+
+<div id="chart">
+    <svg></svg>
 </div>
-<h4><p><a href="/index">Back</a></p></h4>
+
+<row>
+<div class="col-lg-4">
+<table  class="table table-striped">
+<thead>
+<tr>
+<th>East</th>
+<th>Wins</th>
+<th>Losses</th>
+<th>Ties</th>
+<th>PPG (Difference)</th>
+<th>OPP PPG (Difference) </th>
+</tr>
+</thead><tbody>
+{% for i in range(8) %}
+<TR class="success">
+   <TD>{{games[i][0]}}</TD>
+   <TD>{{games[i][1]}}</TD>
+   <TD>{{games[i][2]}}</TD>
+   <TD>{{games[i][3]}}</TD>
+   <TD>{{games[i][4]}} ({{games[i][5]}})</TD>
+   <TD>{{games[i][6]}} ({{games[i][7]}})</TD>
+</TR>
+{% endfor %}
+{% for i in range(8,15) %}
+<TR >
+   <TD>{{games[i][0]}}</TD>
+   <TD>{{games[i][1]}}</TD>
+   <TD>{{games[i][2]}}</TD>
+   <TD>{{games[i][3]}}</TD>
+   <TD>{{games[i][4]}} ({{games[i][5]}})</TD>
+   <TD>{{games[i][6]}} ({{games[i][7]}})</TD>
+</TR>
+{% endfor %}
+</tbody>
+</table></div>
+
+<div class="col-lg-4 col-md-offset-1">
+<table  class="table table-striped">
+<thead>
+<tr>
+<th>West</th>
+<th>Wins</th>
+<th>Losses</th>
+<th>Ties</th>
+<th>PPG (Difference)</th>
+<th>OPP PPG (Difference) </th>
+</tr>
+</thead><tbody>
+{% for i in range(15,23) %}
+<TR class="success">
+   <TD>{{games[i][0]}}</TD>
+   <TD>{{games[i][1]}}</TD>
+   <TD>{{games[i][2]}}</TD>
+   <TD>{{games[i][3]}}</TD>
+   <TD>{{games[i][4]}} ({{games[i][5]}})</TD>
+   <TD>{{games[i][6]}} ({{games[i][7]}})</TD>
+</TR>
+{% endfor %}
+{% for i in range(23,30) %}
+<TR>
+   <TD>{{games[i][0]}}</TD>
+   <TD>{{games[i][1]}}</TD>
+   <TD>{{games[i][2]}}</TD>
+   <TD>{{games[i][3]}}</TD>
+   <TD>{{games[i][4]}} ({{games[i][5]}})</TD>
+   <TD>{{games[i][6]}} ({{games[i][7]}})</TD>
+</TR>
+{% endfor %}
+</tbody>
+</table></div>
+
+<div class="col-lg-4">
+<table class="table table-striped">
+<thead>
+<tr>
+<th></th>
+<th>PPG</th>
+<th>PPG (Current)</th>
+</tr></thead>
+<tbody>
+<tr class="success">
+<td>{{players[0][0]}}</td>
+<td>{{players[0][1]}}</td>
+<td>{{players[0][2]}}</td>
+</tr>
+{% for player in players[1:15] %}
+<tr>
+<td>{{player[0]}}</td>
+<td>{{player[1]}}</td>
+<td>{{player[2]}}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table></div>
+
+</row>
 </div>
+</body>
+</html>
