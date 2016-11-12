@@ -35,11 +35,12 @@
 		</div>
 		<form id='userinfoform' method='post' action='index' >
 		<p>Enter an expression using % as your independent variable using standard python syntax. Functions like log are already in the namespace: <input type="text" class="form-control" name="name" id="name" placeholder="2 if % < 23 else 3"></input></p>
-		<ol> Some examples:
+		<p>Some examples:
+		<ol> 
 		{% for i in range(4) %}
 		<li> {{examples[i][0]}} <input class ="btn btn-primary" id="cd{{i|safe}}" type="button" value="{{examples[i][1] |safe}}" onClick=" check(); ">
 		{% endfor %}
-		</ol>
+		</ol></p>
 		<p>Do you want to include free throws?    <label class="radio-inline">
   <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value='1' checked> Yes
 </label>
@@ -47,7 +48,7 @@
   <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value=''> No
 </label></p>
 		      <p>
-    <input type='submit' value='Submit' />
+    <input type='submit' class ="btn btn-primary" value='Submit' />
       </p>
 		</form>
 		</div>
