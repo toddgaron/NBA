@@ -587,16 +587,21 @@ svg .title {
 <div class="container">
 
 <h1>What the NBA would look like if shots were scored with ...</h1>
-<h2>pts(%) = {{name}}</h2>
+<h2><p>pts(%) = ({{name}}) {{'including' if fts else 'excluding'}} free throws</p>
 
+<p> {{games[0][0]}} and {{games[15][0]}} would be the first seeds in the east and west, winning {{games[0][1]}} and {{games[15][1]}} games respectively. {{players[0][0]}} would be your Scoring Title winning with {{players[0][1]}} PPG.
+</p>
+</h2>
 <script>
         var testdata = [{
             "bar": true,
                 "key": "Shots Taken",
-                "values": [[0, 13588], [1, 19510], [2, 21004], [3, 10385], [4, 5687], [5, 5071], [6, 4929], [7, 4548], [8, 3972], [9, 3512], [10, 3301], [11, 2995], [12, 3227], [13, 3250], [14, 3472], [15, 4225], [16, 5193], [17, 6080], [18, 6615], [19, 6601], [20, 5389], [21, 3677], [22, 2593], [23, 7679], [24, 14009], [25, 20064], [26, 10711], [27, 3883], [28, 1283], [29, 453], [30, 198], [31, 96], [32, 48], [33, 44], [34, 34], [35, 26], [36, 33], [37, 27], [38, 34], [39, 24], [40, 45], [41, 41], [42, 18], [43, 21], [44, 20], [45, 20], [46, 19], [47, 23], [48, 23], [49, 30]]
+                "color": "#ccf",
+                "values": [[0, 13588], [1, 19510], [2, 21004], [3, 10385], [4, 5687], [5, 5071], [6, 4929], [7, 4548], [8, 3972], [9, 3512], [10, 3301], [11, 2995], [12, 3227], [13, 3250], [14, 3472], [15, 4225], [16, 5193], [17, 6080], [18, 6615], [19, 6601], [20, 5389], [21, 3677], [22, 2593], [23, 7679], [24, 14009], [25, 20064], [26, 10711], [27, 3883], [28, 1283], [29, 453], [30, 198], [31, 96], [32, 48], [33, 44], [34, 34], [35, 26], [36, 33], [37, 27], [38, 34], [39, 24], [40, 45], [41, 41], [42, 18], [43, 21], [44, 20], [45, 20], [46, 19], [47, 23], [48, 23], [49, 30], [50, 28]]
         }, {
             "key": "Point Value",
-            	"values": {{pts[:50] | safe }} }, {
+            "color" : "#333",
+            	"values": {{pts| safe }} }, {
             "key": "Points Per Shot (w/o fouls)",
             "values":  {{expected| safe}}
         }].map(function (series) {
@@ -615,7 +620,7 @@ svg .title {
             chart = nv.models.linePlusBarChart()
                 .margin({
                 top: 30,
-                right: 60,
+                right: 70,
                 bottom: 50,
                 left: 70
             })
@@ -627,14 +632,15 @@ svg .title {
             chart.xAxis.tickFormat(function (d) {
                 var dx = testdata[0].values[d] && testdata[0].values[d].x;
                 return dx //? d3.time.format('%x')(new Date(dx)) : '';
-            });
+            }).axisLabel('Feet from Basket');
                 //.showMaxMin(false);
 
-            chart.y1Axis.tickFormat(d3.format(',f'));
+            chart.y1Axis.tickFormat(d3.format(',f'))
+            .axisLabel('Shots Taken');
 
             chart.y2Axis.tickFormat(function (d) {
                 return d3.format(',.2f')(d)
-            });
+            }).axisLabel('Points').axisLabelDistance(-30);
 
             chart.bars.forceY([0]).padData(false);
             //chart.lines.forceY([0]);
@@ -733,9 +739,9 @@ svg .title {
 <table class="table table-striped">
 <thead>
 <tr>
-<th>Scoring Champion</th>
+<th>Scoring Title</th>
 <th>PPG (Δ)</th>
-<th>PPS w/o FTs (Δ)</th>
+<th>PPS {{'w/' if fts else 'w/o'}} FTs (Δ)</th>
 </tr></thead>
 <tbody>
 <tr class="success">
