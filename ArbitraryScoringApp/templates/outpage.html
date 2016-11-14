@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<title>NBA Rescoring</title>
 		
 <link rel="stylesheet" type="text/css" href="https://raw.github.com/novus/nvd3/master/src/nv.d3.css‌​"/>
 
@@ -587,11 +588,26 @@ svg .title {
 <div class="container">
 
 <h1>What the NBA would look like if shots were scored with ...</h1>
-<h2><p>pts(%) = ({{name}}) {{'including' if fts else 'excluding'}} free throws</p>
-
-<p> {{games[0][0]}} and {{games[15][0]}} would be the first seeds in the east and west, winning {{games[0][1]}} and {{games[15][1]}} games respectively. {{players[0][0]}} would be your Scoring Title winning with {{players[0][1]}} PPG.
+<form id='userinfoform' method='post' action='index' >	
+		
+		<p><div class="input-group">
+      <div class="input-group-addon"> pts(%) = </div>
+      <input type="text" class="form-control" name="name" id="name" value="{{name}}" width=75%>
+    </div></p>
+		
+		<p>Including FTs:  <label class="radio-inline">
+  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value='1' {{'checked' if fts}} > Yes
+</label>
+<label class="radio-inline">
+  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value=''  {{'checked' if not fts}}> No
+</label> 
+    <input type='submit' class ="btn btn-primary" value='Update' />
+      </p>
+		</form>
+<h3>
+<p> {{games[0][0]}} and {{games[15][0]}} would be the first seeds in the east and west, winning {{games[0][1]}} and {{games[15][1]}} games respectively. {{players[0][0]}} would be your Scoring Title winner with {{players[0][1]}} PPG.
 </p>
-</h2>
+</h3>
 <script>
         var testdata = [{
             "bar": true,
@@ -603,6 +619,7 @@ svg .title {
             "color" : "#333",
             	"values": {{pts| safe }} }, {
             "key": "Points Per Shot (w/o fouls)",
+            "color" : "#3d83f4",
             "values":  {{expected| safe}}
         }].map(function (series) {
             series.values = series.values.map(function (d) {
@@ -623,7 +640,9 @@ svg .title {
                 right: 70,
                 bottom: 50,
                 left: 70
-            })
+            }).options({
+      brushExtent: [0,35]
+    })
                 .x(function (d, i) {
                 return i
             })
@@ -654,6 +673,9 @@ svg .title {
             chart.dispatch.on('stateChange', function (e) {
                 nv.log('New State:', JSON.stringify(e));
             });
+            
+            
+
 
             return chart;
         });
@@ -760,6 +782,12 @@ svg .title {
 </table></div>
 
 </div>
+
+		
+
+        <footer>
+        <p>&copy; <a href="http://www.toddgaron.com">Todd Garon</a> 2016</p>
+      </footer>
 </div>
 </body>
 </html>

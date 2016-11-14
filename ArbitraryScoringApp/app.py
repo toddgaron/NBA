@@ -79,11 +79,11 @@ def playerScoring(pts, func, fts = True):
 
 @app.errorhandler(404)
 def error(e):
-	return render_template('error.html',message='Something\'s wrong.')
+	return render_template('errorpage.html',message='Something\'s wrong.')
 	
 @app.errorhandler(500)
 def error(e):
-	return render_template('error.html',message='Something\'s wrong.')
+	return render_template('errorpage.html',message='Something\'s wrong.')
 
 if __name__ == '__main__':
 	app.run(port=33507)
