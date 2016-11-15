@@ -4,8 +4,6 @@
 		<meta charset="utf-8">
 		<title>NBA Rescoring</title>
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 	
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -25,40 +23,57 @@
 		
 		})
 		</script>
+		
+	<style>
+	.mb {
+	margin-bottom: 15px
+}
+
+	</style>
 	</head>
 	
 	
 	<body>
 	<div class="container">
-		<div>
+		<div class="mb">
   			<h1>What the NBA would look like if shots were scored with ...</h1>
 		</div>
+		
+		<div class ="mb">
 		<form id='userinfoform form-inline' method='post' action='index' >
-		<p>Enter an expression for points as a function of the radial distance (in feet) from the basket using % as your independent variable and using standard python syntax. Functions like log are already in the namespace:</p>
+		<div class = "mb">
+		<p>Enter an expression for points as a function of the radial distance (in feet) from the basket using % as your independent variable and using python syntax. Functions like log are already in the namespace:</p>
+		</div>
+		<div class = "mb">
 		<p><div class="input-group">
       <div class="input-group-addon"> pts(%) = </div>
       <input type="text" class="form-control"name="name" id="name" value="2 if % < 23 else 3">
-    </div></p>
+    </div></p></div>
 		
 <!-- 		<p> pts(%) = <input type="text" width="auto" class="form-control" name="name" id="name" value="2 if % < 23 else 3"></input></p></h3> -->
 		
+		<div class = "mb">
 		<p>Some examples:
 		<ol> 
 		{% for i in range(4) %}
 		<li> {{examples[i][0]}} <input class ="btn btn-primary" id="cd{{i|safe}}" type="button" value="{{examples[i][1] |safe}}" onClick=" check(); ">
 		{% endfor %}
-		</ol></p>
+		</ol></p></div>
 		
+		<div class = "mb">
 		<p>Do you want to include free throws?    <label class="radio-inline">
+		
   <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value='1' checked> Yes
 </label>
-<label class="radio-inline">
+<label class="radio-inline">    
   <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value=''> No
-</label> </p>
+</label> </p></div>
+
 		      <p>
     <input type='submit' class ="btn btn-primary" value='Submit' />
       </p>
 		</form>
+		</div>
 		
 		        <footer>
         <p>&copy; <a href="http://www.toddgaron.com">Todd Garon</a> 2016</p>

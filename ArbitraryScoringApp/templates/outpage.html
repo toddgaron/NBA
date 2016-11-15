@@ -582,12 +582,20 @@ svg .title {
 #chart {
     height:400px;
 }
+
+.mb {
+	margin-bottom: 15px
+}
+
+
     </style>
 </head>
 <body>
 <div class="container">
-
-<h1>What the NBA would look like if shots were scored with ...</h1>
+<div class="mb">
+<h1>What the NBA would look like if shots were scored with...</h1>
+</div>
+<div class="mb">
 <form id='userinfoform' method='post' action='index' >	
 		
 		<p><div class="input-group">
@@ -604,10 +612,14 @@ svg .title {
     <input type='submit' class ="btn btn-primary" value='Update' />
       </p>
 		</form>
-<h3>
-<p> {{games[0][0]}} and {{games[15][0]}} would be the first seeds in the east and west, winning {{games[0][1]}} and {{games[15][1]}} games respectively. {{players[0][0]}} would be your Scoring Title winner with {{players[0][1]}} PPG.
-</p>
-</h3>
+</div>
+
+<div class="mb">		
+<h4>
+{{games[0][0]}} and {{games[15][0]}} would be the first seeds in the east and west, winning {{games[0][1]}} and {{games[15][1]}} games respectively. {{players[0][0]}} would be your Scoring Title winner with {{players[0][1]}} PPG.
+</h4>
+</div>
+
 <script>
         var testdata = [{
             "bar": true,
@@ -682,16 +694,19 @@ svg .title {
        
 </script>
 
+<div class = "mb">
 <div id="chart">
     <svg></svg>
+</div>
 </div>
 
 <div class = "center-block">
 <div class="col-md-4">
+<h3> Eastern Conference Standings </h3>
 <table  class="table table-striped">
 <thead>
 <tr>
-<th>East</th>
+<th></th>
 <th>W</th>
 <th>L</th>
 <th>T</th>
@@ -723,10 +738,11 @@ svg .title {
 </table></div>
 
 <div class="col-md-4">
+<h3> Western Conference Standings </h3>
 <table  class="table table-striped">
 <thead>
 <tr>
-<th>West</th>
+<th></th>
 <th>W</th>
 <th>L</th>
 <th>T</th>
@@ -758,10 +774,11 @@ svg .title {
 </table></div>
 
 <div class="col-md-4">
+<h3> Scoring Title Standings </h3>
 <table class="table table-striped">
 <thead>
 <tr>
-<th>Scoring Title</th>
+<th></th>
 <th>PPG (Δ)</th>
 <th>PPS {{'w/' if fts else 'w/o'}} FTs (Δ)</th>
 </tr></thead>
