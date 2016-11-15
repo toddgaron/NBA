@@ -11,4 +11,3 @@ The notebook And1 Heatmap plots a distribution of where and one opportunities oc
 The notebook ArbitraryScoring looks at building a way to reevaluate the previous season based on different scoring systems, like adding a 4 point line. ArbitraryScoringApp is the beginning a flask app integrating these results. Some current difficulties:
 - What other stats do we want to see
 - How to go from one shot distribution to another
-- Add a text box on the results page
