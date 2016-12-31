@@ -6,6 +6,8 @@ The notebook FreeThrows looks at a suggestion of Jeff Van Gundy's to replace all
 
 The notebook BonusTime quantifies how long teams spend in the bonus. The results are on r/nba as [well](https://www.reddit.com/r/nba/comments/5bnc6i/time_spent_in_the_bonus_oc/).
 
+NBA Isolation Forests looks at applying isolation forests to different ways of calculating rate stats and is presented here [/rnba](https://www.reddit.com/r/nba/comments/5l88xd/nba_isolation_forests_oc/).
+
 The notebook And1 Heatmap plots a distribution of where and one opportunities occur. The interesting distributions are towards the middle of the notebook.
 
 The notebook ArbitraryScoring looks at building a way to reevaluate the previous season based on different scoring systems, like adding a 4 point line. ArbitraryScoringApp is the beginning a flask app integrating these results. Some current difficulties:
